@@ -16,7 +16,7 @@ public class Order extends baseDTO implements Serializable {
 
   @Column(name = "order_number")
   private
-  int order_number;
+  long order_number;
 
   public int getCustomer_id() {
     return customer_id;
@@ -26,11 +26,11 @@ public class Order extends baseDTO implements Serializable {
     this.customer_id = customer_id;
   }
 
-  public int getOrder_number() {
+  public long getOrder_number() {
     return order_number;
   }
 
-  public void setOrder_number(int order_number) {
+  public void setOrder_number(long order_number) {
     this.order_number = order_number;
   }
 }
