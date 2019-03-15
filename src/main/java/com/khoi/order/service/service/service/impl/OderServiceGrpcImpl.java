@@ -28,7 +28,9 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
       StreamObserver<CreateOrderResponse> responseObserver) {
     Order order = new Order();
     order.setCustomer_id(request.getCustomerId());
+    //generate unique number
     order.setOrder_number(new Date().getTime());
+    //create order
     orderDAO.create(order);
     responseObserver.onNext(CreateOrderResponse.newBuilder().setOrderId(order.getId()).build());
     responseObserver.onCompleted();
