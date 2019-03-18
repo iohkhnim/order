@@ -1,34 +1,40 @@
 package com.khoi.order.dto;
 
 import com.khoi.basecrud.dto.baseDTO;
-import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "order_item")
 public class OrderItem extends baseDTO implements Serializable {
 
   @Column(name = "order_id")
-  private
-  int order_id;
+  private int order_id;
 
   @Column(name = "product_id")
-  private
-  int product_id;
+  private int product_id;
 
   @Column(name = "stock_id")
-  private
-  int stock_id;
+  private int stock_id;
 
   @Column(name = "amount")
-  private
-  int amount;
+  private int amount;
 
   @Column(name = "price")
-  private
-  int price;
+  private int price;
+
+  public OrderItem() {}
+
+  public OrderItem(int order_id, int product_id, int stock_id, int amount, int price) {
+    this.order_id = order_id;
+    this.product_id = product_id;
+    this.stock_id = stock_id;
+    this.amount = amount;
+    this.price = price;
+  }
 
   public int getOrder_id() {
     return order_id;
