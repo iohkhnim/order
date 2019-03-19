@@ -50,7 +50,7 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
     }
   }
 
-  @Override
+  /*@Override
   public void createOrderItem(
       CreateOrderItemRequest request, StreamObserver<CreateOrderItemResponse> responseOberserver) {
     OrderItem orderItem = new OrderItem();
@@ -63,9 +63,9 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
     responseOberserver.onNext(
         CreateOrderItemResponse.newBuilder().setOrderItemId(orderItem.getId()).build());
     responseOberserver.onCompleted();
-  }
+  }*/
 
-  public Boolean createOrderItem(CheckoutDataProto checkoutDataProto, int order_id) {
+  private Boolean createOrderItem(CheckoutDataProto checkoutDataProto, int order_id) {
     return orderItemService.create(checkoutDataProto, order_id);
   }
 }
