@@ -61,7 +61,10 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
   @Override
   public void getOrders(GetOrdersRequest request,
       StreamObserver<GetOrdersResponse> responseStreamObserver) {
-      List<Order> orderList = orderDAO.getOrdersByCustomerId(request.getCustomerId());
+    List<Order> orderList = orderDAO.getOrdersByCustomerId(request.getCustomerId());
+    orderList.stream().forEach(p -> responseStreamObserver
+        .onNext(p.toProto(orderItemService.calculateTotalPrice(p.getId()))));
+    responseStreamObserver.onCompleted();
   }
 
   /*@Override

@@ -6,4 +6,5 @@ import com.khoi.order.dto.OrderItem;
 
 public interface IOrderItemDAO extends IBaseDAO<OrderItem, Integer> {
 
+  int calculateTotalPrice(int order_id);
 }

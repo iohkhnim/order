@@ -1,6 +1,7 @@
 package com.khoi.order.service.service.service.impl;
 
 import com.khoi.basecrud.service.service.impl.BaseServiceImpl;
+import com.khoi.order.dao.IOrderItemDAO;
 import com.khoi.order.dto.OrderItem;
 import com.khoi.order.service.IOrderItemService;
 import com.khoi.orderproto.CheckoutDataProto;
@@ -9,6 +10,7 @@ import com.khoi.proto.PriceServiceGrpc;
 import com.khoi.stockproto.GetBestStockRequest;
 import com.khoi.stockproto.StockServiceGrpc;
 import com.khoi.stockproto.SubtractRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +20,10 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
 
   @Qualifier("priceService")
   private final PriceServiceGrpc.PriceServiceBlockingStub priceService;
-
   @Qualifier("stockService")
   private final StockServiceGrpc.StockServiceBlockingStub stockService;
+  @Autowired
+  IOrderItemDAO orderItemDAO;
 
   public OrderItemServiceImpl(
       PriceServiceGrpc.PriceServiceBlockingStub priceService,
@@ -55,10 +58,11 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   private Boolean subtract(int stock_id, int amount) {
     try {
       if (stockService
-              .subtract(SubtractRequest.newBuilder().setStockId(stock_id).setAmount(amount).build())
-              .getStockId()
-          > 0) return true;
-      else {
+          .subtract(SubtractRequest.newBuilder().setStockId(stock_id).setAmount(amount).build())
+          .getStockId()
+          > 0) {
+        return true;
+      } else {
         return false;
       }
     } catch (Exception ex) {
@@ -77,11 +81,16 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
     if (price > 0 && bestStockId > 0 && isSubtractCompleted == true) {
       OrderItem orderItem = new OrderItem(order_id, product_id, bestStockId, amount, price);
       if (create(orderItem)) {
-          return true;
+        return true;
       } else {
-          return false;
+        return false;
       }
     }
     return false;
+  }
+
+  @Override
+  public int calculateTotalPrice(int order_id) {
+    return orderItemDAO.calculateTotalPrice(order_id);
   }
 }

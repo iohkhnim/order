@@ -5,5 +5,8 @@ import com.khoi.order.dto.OrderItem;
 import com.khoi.orderproto.CheckoutDataProto;
 
 public interface IOrderItemService extends IBaseService<OrderItem, Integer> {
-    Boolean create(CheckoutDataProto checkoutDataProto, int order_id);
+
+  Boolean create(CheckoutDataProto checkoutDataProto, int order_id);
+
+  int calculateTotalPrice(int order_id);
 }
