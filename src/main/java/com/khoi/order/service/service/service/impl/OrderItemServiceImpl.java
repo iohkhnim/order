@@ -5,11 +5,17 @@ import com.khoi.order.dao.IOrderItemDAO;
 import com.khoi.order.dto.OrderItem;
 import com.khoi.order.service.IOrderItemService;
 import com.khoi.orderproto.CheckoutDataProto;
+import com.khoi.productproto.GetProductNameByIdRequest;
+import com.khoi.productproto.ProductServiceGrpc;
 import com.khoi.proto.GetPriceRequest;
 import com.khoi.proto.PriceServiceGrpc;
 import com.khoi.stockproto.GetBestStockRequest;
+import com.khoi.stockproto.GetSupplierIdByStockIdRequest;
 import com.khoi.stockproto.StockServiceGrpc;
 import com.khoi.stockproto.SubtractRequest;
+import com.khoi.supplierproto.GetSupplierNameByIdRequest;
+import com.khoi.supplierproto.SupplierServiceGrpc;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,14 +28,22 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   private final PriceServiceGrpc.PriceServiceBlockingStub priceService;
   @Qualifier("stockService")
   private final StockServiceGrpc.StockServiceBlockingStub stockService;
+  @Qualifier("supplierService")
+  private final SupplierServiceGrpc.SupplierServiceBlockingStub supplierService;
+  @Qualifier("poductService")
+  private final ProductServiceGrpc.ProductServiceBlockingStub productService;
   @Autowired
   IOrderItemDAO orderItemDAO;
 
   public OrderItemServiceImpl(
       PriceServiceGrpc.PriceServiceBlockingStub priceService,
-      StockServiceGrpc.StockServiceBlockingStub stockService) {
+      StockServiceGrpc.StockServiceBlockingStub stockService,
+      SupplierServiceGrpc.SupplierServiceBlockingStub supplierService,
+      ProductServiceGrpc.ProductServiceBlockingStub productService) {
     this.priceService = priceService;
     this.stockService = stockService;
+    this.supplierService = supplierService;
+    this.productService = productService;
   }
 
   private int getBestStockId(int product_id, int amount) {
@@ -92,5 +106,30 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   @Override
   public int calculateTotalPrice(int order_id) {
     return orderItemDAO.calculateTotalPrice(order_id);
+  }
+
+  @Override
+  public int getSupplierIdByStockId(int stock_id) {
+    return stockService.getSupplierIdByStockId(
+        GetSupplierIdByStockIdRequest.newBuilder().setStockId(stock_id).build()).getSupplierId();
+  }
+
+  @Override
+  public List<OrderItem> getOrderItemsByOrderId(int order_id) {
+    return orderItemDAO.getOrderItemsByOrderId(order_id);
+  }
+
+  @Override
+  public String getSupplierNameById(int supplier_id) {
+    return supplierService.getSupplierNameById(
+        GetSupplierNameByIdRequest.newBuilder().setSupplierId(supplier_id).build())
+        .getSupplierName();
+  }
+
+  @Override
+  public String getProductNameById(int product_id) {
+    return productService
+        .getProductNameById(GetProductNameByIdRequest.newBuilder().setProductId(product_id).build())
+        .getProductName();
   }
 }

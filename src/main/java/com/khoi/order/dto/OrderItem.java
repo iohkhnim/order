@@ -1,11 +1,10 @@
 package com.khoi.order.dto;
 
 import com.khoi.basecrud.dto.baseDTO;
-
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "order_item")
@@ -26,7 +25,8 @@ public class OrderItem extends baseDTO implements Serializable {
   @Column(name = "price")
   private int price;
 
-  public OrderItem() {}
+  public OrderItem() {
+  }
 
   public OrderItem(int order_id, int product_id, int stock_id, int amount, int price) {
     this.order_id = order_id;
@@ -34,6 +34,13 @@ public class OrderItem extends baseDTO implements Serializable {
     this.stock_id = stock_id;
     this.amount = amount;
     this.price = price;
+  }
+
+  public com.khoi.orderproto.OrderItem toProto(OrderItem orderItem, String supplier_name,
+      String product_name) {
+      return com.khoi.orderproto.OrderItem.newBuilder().setAmount(getAmount()).setPrice(getPrice())
+        .setTotalOrderItem(getAmount() * getPrice()).setProductName(product_name)
+        .setSupplierName(supplier_name).build();
   }
 
   public int getOrder_id() {

@@ -3,6 +3,7 @@ package com.khoi.order.dao.dao.impl;
 import com.khoi.basecrud.dao.dao.impl.BaseDAOImpl;
 import com.khoi.order.dao.IOrderItemDAO;
 import com.khoi.order.dto.OrderItem;
+import java.util.List;
 import javax.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,5 +20,13 @@ public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements
     Query query = entityManager.createQuery(hql);
     query.setParameter("order_id", order_id);
     return Integer.parseInt(query.getResultList().get(0).toString());
+  }
+
+  @Override
+  public List<OrderItem> getOrderItemsByOrderId(int order_id) {
+    String hql = "FROM OrderItem o WHERE o.order_id = :order_id";
+    Query query = entityManager.createQuery(hql);
+    query.setParameter("order_id", order_id);
+    return (List<OrderItem>) query.getResultList();
   }
 }

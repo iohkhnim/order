@@ -12,10 +12,32 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OderDAOImpl extends BaseDAOImpl<Order, Integer> implements IOrderDAO {
 
+  @Override
   public List<Order> getOrdersByCustomerId(int customer_id) {
     String hql = "FROM Order o WHERE o.customer_id = :cusid";
     Query query = entityManager.createQuery(hql);
     query.setParameter("cusid", customer_id);
     return (List<Order>) query.getResultList();
+  }
+
+  @Override
+  public Boolean authenticateOrderOwner(int customer_id, int order_id) {
+    String hql = "FROM Order o WHERE o.customer_id = :cusid AND o.id = :id";
+    Query query = entityManager.createQuery(hql);
+    query.setParameter("cusid", customer_id);
+    query.setParameter("id", order_id);
+    if (query.getResultList().isEmpty()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  @Override
+  public Order getOrderByCustomerId(int order_id) {
+    String hql = "FROM Order o WHERE o.id = :id";
+    Query query = entityManager.createQuery(hql);
+    query.setParameter("id", order_id);
+    return (Order) query.getSingleResult();
   }
 }

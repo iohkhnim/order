@@ -9,15 +9,19 @@ import com.khoi.orderproto.CreateOrderRequest;
 import com.khoi.orderproto.CreateOrderResponse;
 import com.khoi.orderproto.GetOrdersRequest;
 import com.khoi.orderproto.GetOrdersResponse;
+import com.khoi.orderproto.OrderItem;
 import com.khoi.orderproto.OrderServiceGrpc;
+import com.khoi.orderproto.TrackingOrderDetailsRequest;
+import com.khoi.orderproto.TrackingOrderDetailsResponse;
 import io.grpc.stub.StreamObserver;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.lognet.springboot.grpc.GRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @GRpcService
-public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
+public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
 
   @Autowired
   IOrderDAO orderDAO;
@@ -65,6 +69,41 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
     orderList.stream().forEach(p -> responseStreamObserver
         .onNext(p.toProto(orderItemService.calculateTotalPrice(p.getId()))));
     responseStreamObserver.onCompleted();
+  }
+
+  @Override
+  public void trackingOrderDetails(TrackingOrderDetailsRequest request,
+      StreamObserver<TrackingOrderDetailsResponse> streamObserver) {
+
+    if (orderDAO.authenticateOrderOwner(request.getCustomerId(), request.getOrderId())) {
+      Order order = orderDAO.getOrderByCustomerId(request.getOrderId());
+      GetOrdersResponse getOrdersResponse = order
+          .toProto(orderItemService.calculateTotalPrice(request.getOrderId()));
+
+      List<OrderItem> orderItemsProto = new ArrayList<>();
+      List<com.khoi.order.dto.OrderItem> orderItemDTO = orderItemService
+          .getOrderItemsByOrderId(request.getOrderId());
+
+      orderItemDTO.forEach(e -> {
+        //get supplier name
+        int supplier_id = orderItemService.getSupplierIdByStockId(e.getStock_id());
+        String supplier_name = orderItemService.getSupplierNameById(supplier_id);
+
+        //get product name
+        String product_name = orderItemService.getProductNameById(e.getProduct_id());
+        //orderItemsProto.add(e.toProto(e, supplier_name, product_name));
+      });
+
+      streamObserver.onNext(TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
+          .addAllOrderItem(orderItemsProto).build());
+      streamObserver.onCompleted();
+
+    } else {
+      GetOrdersResponse getOrdersResponse = null;
+      streamObserver.onNext(
+          TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
+              .addAllOrderItem(null).build());
+    }
   }
 
   /*@Override
