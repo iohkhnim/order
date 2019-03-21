@@ -3,24 +3,30 @@ package com.khoi.order.service.service.service.impl;
 import com.khoi.order.dao.IOrderDAO;
 import com.khoi.order.dao.IOrderItemDAO;
 import com.khoi.order.dto.Order;
-import com.khoi.order.dto.OrderItem;
 import com.khoi.order.service.IOrderItemService;
-import com.khoi.orderproto.*;
+import com.khoi.orderproto.CheckoutDataProto;
+import com.khoi.orderproto.CreateOrderRequest;
+import com.khoi.orderproto.CreateOrderResponse;
+import com.khoi.orderproto.GetOrdersRequest;
+import com.khoi.orderproto.GetOrdersResponse;
+import com.khoi.orderproto.OrderServiceGrpc;
 import io.grpc.stub.StreamObserver;
-import org.lognet.springboot.grpc.GRpcService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Date;
 import java.util.List;
+import org.lognet.springboot.grpc.GRpcService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @GRpcService
 public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
 
-  @Autowired IOrderDAO orderDAO;
+  @Autowired
+  IOrderDAO orderDAO;
 
-  @Autowired IOrderItemDAO orderItemDAO;
+  @Autowired
+  IOrderItemDAO orderItemDAO;
 
-  @Autowired IOrderItemService orderItemService;
+  @Autowired
+  IOrderItemService orderItemService;
 
   @Override
   public void createOrder(
@@ -38,7 +44,9 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
       checkoutDataProtos.stream()
           .forEach(
               entry -> {
-                if(createOrderItem(entry, order.getId())) return;
+                if (createOrderItem(entry, order.getId())) {
+                  return;
+                }
               });
 
       // everything is good, send response
@@ -48,6 +56,12 @@ public class OderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase {
       responseObserver.onNext(CreateOrderResponse.newBuilder().setOrderId(-1).build());
       responseObserver.onCompleted();
     }
+  }
+
+  @Override
+  public void getOrders(GetOrdersRequest request,
+      StreamObserver<GetOrdersResponse> responseStreamObserver) {
+      List<Order> orderList = orderDAO.getOrdersByCustomerId(request.getCustomerId());
   }
 
   /*@Override
