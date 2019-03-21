@@ -30,7 +30,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   private final StockServiceGrpc.StockServiceBlockingStub stockService;
   @Qualifier("supplierService")
   private final SupplierServiceGrpc.SupplierServiceBlockingStub supplierService;
-  @Qualifier("poductService")
+  @Qualifier("productService")
   private final ProductServiceGrpc.ProductServiceBlockingStub productService;
   @Autowired
   IOrderItemDAO orderItemDAO;

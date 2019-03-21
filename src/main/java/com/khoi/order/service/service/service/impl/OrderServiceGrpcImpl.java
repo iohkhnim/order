@@ -84,6 +84,13 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
       List<com.khoi.order.dto.OrderItem> orderItemDTO = orderItemService
           .getOrderItemsByOrderId(request.getOrderId());
 
+      for (com.khoi.order.dto.OrderItem e : orderItemDTO) {
+        //get supplier name
+        int supplier_id = orderItemService.getSupplierIdByStockId(e.getStock_id());
+        String supplier_name = orderItemService.getSupplierNameById(supplier_id);
+        //System.out.println(supplier_id);
+      }
+
       orderItemDTO.forEach(e -> {
         //get supplier name
         int supplier_id = orderItemService.getSupplierIdByStockId(e.getStock_id());
@@ -91,7 +98,7 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
 
         //get product name
         String product_name = orderItemService.getProductNameById(e.getProduct_id());
-        //orderItemsProto.add(e.toProto(e, supplier_name, product_name));
+        orderItemsProto.add(e.toProto(supplier_name, product_name));
       });
 
       streamObserver.onNext(TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
@@ -103,6 +110,7 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
       streamObserver.onNext(
           TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
               .addAllOrderItem(null).build());
+      streamObserver.onCompleted();
     }
   }
 
