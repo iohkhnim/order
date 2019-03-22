@@ -22,6 +22,11 @@ public class OrderController {
   @Autowired
   IOrderService orderService;
 
+  /**
+   * <p>An API endpoint (/order/create) with method POST creates an order</p>
+   * @param order Order information
+   * @return Https status according to result
+   */
   @PostMapping("create")
   public ResponseEntity<Void> create(@RequestBody Order order) {
     Boolean flag = orderService.create(order);
@@ -32,6 +37,11 @@ public class OrderController {
     }
   }
 
+  /**
+   * <p>An API endpoint (/order/update) with method PUT updates an order</p>
+   * @param order Order information
+   * @return Https status according to result
+   */
   @PutMapping("update")
   public ResponseEntity<Void> update(@RequestBody Order order) {
     Boolean flag = orderService.update(order);
@@ -42,17 +52,31 @@ public class OrderController {
     }
   }
 
+  /**
+   * <p>An API endpoint (/order/findById/{id}) with method GET gets information of given Order ID</p>
+   * @param id Order ID
+   * @return Return information of give Order ID
+   */
   @GetMapping("findById/{id}")
   public ResponseEntity<Order> findByid(@PathVariable("id") int id) {
     Order obj = orderService.findByid(id);
     return new ResponseEntity<Order>(obj, HttpStatus.OK);
   }
 
+  /**
+   * <p>An API endpoint (/order/findAll) with method GET gets information of all Order </p>
+   * @return Return all orders information
+   */
   @GetMapping("findAll")
   public ResponseEntity<List<Order>> findAll() {
     return new ResponseEntity<List<Order>>(orderService.findAll(), HttpStatus.OK);
   }
 
+  /**
+   * <p>An API endpoint (/order/delete/{id}) with method DELETE deletes an Order </p>
+   * @param id Order ID need to be deleted
+   * @return Return Http status according to result
+   */
   @DeleteMapping("delete/{id}")
   public ResponseEntity<Void> delete(@PathVariable("id") int id) {
     if (orderService.delete(id)) {

@@ -35,6 +35,13 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
   @Autowired
   IOrderItemService orderItemService;
 
+  /**
+   * <p>This method receives order information from gRPC client and create an order in database
+   * with given information</p>
+   *
+   * @param request Contain all needed information for creating and order
+   * @param responseObserver Return created order ID or -1 if it's failed to create new order
+   */
   @Override
   public void createOrder(
       CreateOrderRequest request, StreamObserver<CreateOrderResponse> responseObserver) {
@@ -65,21 +72,35 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
     }
   }
 
+  /**
+   * <p>This method return all orders information of a customer through OrderProto</p>
+   *
+   * @param request Customer ID
+   * @param responseObserver Return all orders information
+   */
   @Override
   public void getOrders(GetOrdersRequest request,
-      StreamObserver<GetOrdersResponse> responseStreamObserver) {
+      StreamObserver<GetOrdersResponse> responseObserver) {
     List<Order> orderList = orderDAO.getOrdersByCustomerId(request.getCustomerId());
-    orderList.stream().forEach(p -> responseStreamObserver
+    orderList.stream().forEach(p -> responseObserver
         .onNext(p.toProto(orderItemService.calculateTotalPrice(p.getId()))));
-    responseStreamObserver.onCompleted();
+    responseObserver.onCompleted();
   }
 
+  /**
+   * <p>This method return an order information and all order items belong to it of a customer.</p>
+   * <p>A customer cannot retrieve another customer order information</p>
+   *
+   * @param request Customer ID and Order ID
+   * @param responseObserver Return an order information and all of its order items information.
+   * Return error code PERMISSION_DENIED if a customer try to retrieve other customer's order
+   */
   @Override
   public void trackingOrderDetails(TrackingOrderDetailsRequest request,
-      StreamObserver<TrackingOrderDetailsResponse> streamObserver) {
+      StreamObserver<TrackingOrderDetailsResponse> responseObserver) {
 
     if (orderDAO.authenticateOrderOwner(request.getCustomerId(), request.getOrderId())) {
-      Order order = orderDAO.getOrderByCustomerId(request.getOrderId());
+      Order order = orderDAO.getOrderByOrderId(request.getOrderId());
       GetOrdersResponse getOrdersResponse = order
           .toProto(orderItemService.calculateTotalPrice(request.getOrderId()));
 
@@ -104,33 +125,24 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
         orderItemsProto.add(e.toProto(supplier_name, product_name));
       });
 
-      streamObserver.onNext(TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
+      responseObserver.onNext(TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
           .addAllOrderItem(orderItemsProto).build());
-      streamObserver.onCompleted();
+      responseObserver.onCompleted();
 
     } else {
 
       Status status = Status.newBuilder().setCode(Code.PERMISSION_DENIED_VALUE)
           .setMessage("This is not your order").build();
-      streamObserver.onError(StatusProto.toStatusRuntimeException(status));
+      responseObserver.onError(StatusProto.toStatusRuntimeException(status));
     }
   }
 
-  /*@Override
-  public void createOrderItem(
-      CreateOrderItemRequest request, StreamObserver<CreateOrderItemResponse> responseOberserver) {
-    OrderItem orderItem = new OrderItem();
-    orderItem.setOrder_id(request.getOrderId());
-    orderItem.setProduct_id(request.getProductId());
-    orderItem.setAmount(request.getAmount());
-    orderItem.setStock_id(request.getStockId());
-    orderItem.setPrice(request.getPrice());
-    orderItemDAO.create(orderItem);
-    responseOberserver.onNext(
-        CreateOrderItemResponse.newBuilder().setOrderItemId(orderItem.getId()).build());
-    responseOberserver.onCompleted();
-  }*/
-
+  /**
+   * <p>Pass data to orderItem service to create order items</p>
+   * @param checkoutDataProto order items information
+   * @param order_id order ID
+   * @return A boolean value according to the result
+   */
   private Boolean createOrderItem(CheckoutDataProto checkoutDataProto, int order_id) {
     return orderItemService.create(checkoutDataProto, order_id);
   }

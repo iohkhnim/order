@@ -36,6 +36,12 @@ public class OrderItem extends baseDTO implements Serializable {
     this.price = price;
   }
 
+  /**
+   * <p>This method builds proto OrderItem type with given information in OrderItem type</p>
+   * @param supplier_name supplier name of product in this order item
+   * @param product_name name of the product in this order item
+   * @return proto OrderItem object
+   */
   public com.khoi.orderproto.OrderItem toProto(String supplier_name,
       String product_name) {
       return com.khoi.orderproto.OrderItem.newBuilder().setAmount(getAmount()).setPrice(getPrice())

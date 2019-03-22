@@ -12,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements IOrderItemDAO {
 
+  /**
+   * <p>This method calculates total price of an order</p>
+   * @param order_id Order ID need to be calculated price
+   * @return Total price of given order
+   */
   @Override
   public int calculateTotalPrice(int order_id) {
     String hql = "SELECT SUM(oi.price*oi.amount) AS total "
@@ -22,6 +27,11 @@ public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements
     return Integer.parseInt(query.getResultList().get(0).toString());
   }
 
+  /**
+   * <p>This method retrieves all order items of given order in database</p>
+   * @param order_id Order ID need to be retrieved its order items
+   * @return All order items belong to provided Order
+   */
   @Override
   public List<OrderItem> getOrderItemsByOrderId(int order_id) {
     String hql = "FROM OrderItem o WHERE o.order_id = :order_id";

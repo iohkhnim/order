@@ -22,6 +22,11 @@ public class Order extends baseDTO implements Serializable {
   private
   long order_number;
 
+  /**
+   * <p>This method convert date from Date type to String type</p>
+   * @param date Date in Date type
+   * @return Date in String type
+   */
   private String convertDate2String(Date date) {
     DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     return dateFormat.format(date);
@@ -43,6 +48,11 @@ public class Order extends baseDTO implements Serializable {
     this.order_number = order_number;
   }
 
+  /**
+   * <p>This method builds GetOrdersResponse type with given information in Order type</p>
+   * @param total_price total Price of current Order
+   * @return GetOrdersResponse object
+   */
   public GetOrdersResponse toProto(int total_price) {
     return GetOrdersResponse.newBuilder().setOrderId(getId()).setOrderNumber(getOrder_number())
         .setCreatedAt(convertDate2String(getCreatedTime())).setTotalPrice(total_price).build();

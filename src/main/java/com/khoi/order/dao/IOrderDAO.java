@@ -10,5 +10,5 @@ public interface IOrderDAO extends IBaseDAO<Order, Integer> {
 
   Boolean authenticateOrderOwner(int customer_id, int order_id);
 
-  Order getOrderByCustomerId(int order_id);
+  Order getOrderByOrderId(int order_id);
 }
