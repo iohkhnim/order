@@ -149,7 +149,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
 
   /**
    * <p>This method return all order items of an order </p>
-   * @param order_id Order ID that need to be got order items
+   * @param order_id Order ID that needs to be got order items
    * @return All order items information of provided order ID
    */
   @Override
@@ -159,7 +159,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
 
   /**
    * <p>This method gets supplier name of a given supplier ID through supplier gRPC server</p>
-   * @param supplier_id supplier ID need to be retrieved its name
+   * @param supplier_id supplier ID needs to be retrieved its name
    * @return supplier name of given supplier ID
    */
   @Override
@@ -171,7 +171,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
 
   /**
    * <p>This method gets product name of a given product ID through product gRPC server</p>
-   * @param product_id product ID need to be retrieved its name
+   * @param product_id product ID needs to be retrieved its name
    * @return product name of given product ID
    */
   @Override

@@ -74,7 +74,7 @@ public class OrderItemController {
 
   /**
    * <p>An API endpoint (/orderItem/delete/{id}) with method DELETE deletes an Order item </p>
-   * @param id Order item ID need to be deleted
+   * @param id Order item ID needs to be deleted
    * @return Return Http status according to result
    */
   @DeleteMapping("delete/{id}")

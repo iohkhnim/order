@@ -14,7 +14,7 @@ public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements
 
   /**
    * <p>This method calculates total price of an order</p>
-   * @param order_id Order ID need to be calculated price
+   * @param order_id Order ID needs to be calculated price
    * @return Total price of given order
    */
   @Override
@@ -29,7 +29,7 @@ public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements
 
   /**
    * <p>This method retrieves all order items of given order in database</p>
-   * @param order_id Order ID need to be retrieved its order items
+   * @param order_id Order ID needs to be retrieved its order items
    * @return All order items belong to provided Order
    */
   @Override

@@ -14,7 +14,7 @@ public class OderDAOImpl extends BaseDAOImpl<Order, Integer> implements IOrderDA
 
   /**
    * <p>This method gets all orders has been placed by given customer ID</p>
-   * @param customer_id customer ID need to be got its order information
+   * @param customer_id customer ID needs to be got its order information
    * @return All orders information belong to given customer
    */
   @Override
@@ -46,7 +46,7 @@ public class OderDAOImpl extends BaseDAOImpl<Order, Integer> implements IOrderDA
 
   /**
    * <p>This method returns order information of given Order ID</p>
-   * @param order_id Order ID need to be retrieved its information
+   * @param order_id Order ID needs to be retrieved its information
    * @return Retunr information of given Order ID
    */
   @Override
