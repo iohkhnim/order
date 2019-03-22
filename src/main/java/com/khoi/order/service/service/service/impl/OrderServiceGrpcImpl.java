@@ -1,5 +1,7 @@
 package com.khoi.order.service.service.service.impl;
 
+import com.google.rpc.Code;
+import com.google.rpc.Status;
 import com.khoi.order.dao.IOrderDAO;
 import com.khoi.order.dao.IOrderItemDAO;
 import com.khoi.order.dto.Order;
@@ -13,6 +15,7 @@ import com.khoi.orderproto.OrderItem;
 import com.khoi.orderproto.OrderServiceGrpc;
 import com.khoi.orderproto.TrackingOrderDetailsRequest;
 import com.khoi.orderproto.TrackingOrderDetailsResponse;
+import io.grpc.protobuf.StatusProto;
 import io.grpc.stub.StreamObserver;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,11 +109,10 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
       streamObserver.onCompleted();
 
     } else {
-      GetOrdersResponse getOrdersResponse = null;
-      streamObserver.onNext(
-          TrackingOrderDetailsResponse.newBuilder().setOrder(getOrdersResponse)
-              .addAllOrderItem(null).build());
-      streamObserver.onCompleted();
+
+      Status status = Status.newBuilder().setCode(Code.PERMISSION_DENIED_VALUE)
+          .setMessage("This is not your order").build();
+      streamObserver.onError(StatusProto.toStatusRuntimeException(status));
     }
   }
 
