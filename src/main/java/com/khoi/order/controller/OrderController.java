@@ -64,7 +64,7 @@ public class OrderController {
   }
 
   /**
-   * <p>An API endpoint (/order/findAll) with method GET gets information of all Order </p>
+   * <p>An API endpoint (/order/findAll) with method GET gets information of all Orders </p>
    * @return Return all orders information
    */
   @GetMapping("findAll")
