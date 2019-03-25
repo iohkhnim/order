@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OderDAOImpl extends BaseDAOImpl<Order, Integer> implements IOrderDAO {
 
   /**
-   * <p>This method gets all orders has been placed by given customer ID</p>
-   * @param customer_id customer ID needs to be got its order information
-   * @return All orders information belong to given customer
+   * {@inheritDoc}
    */
   @Override
   public List<Order> getOrdersByCustomerId(int customer_id) {
@@ -26,10 +24,7 @@ public class OderDAOImpl extends BaseDAOImpl<Order, Integer> implements IOrderDA
   }
 
   /**
-   * <p>This method checks if given order belongs to given customer</p>
-   * @param customer_id Customer ID gave this Order ID
-   * @param order_id Order ID given by customer
-   * @return Return A boolean value according to result
+   * {@inheritDoc}
    */
   @Override
   public Boolean authenticateOrderOwner(int customer_id, int order_id) {
@@ -45,9 +40,7 @@ public class OderDAOImpl extends BaseDAOImpl<Order, Integer> implements IOrderDA
   }
 
   /**
-   * <p>This method returns order information of given Order ID</p>
-   * @param order_id Order ID needs to be retrieved its information
-   * @return Retunr information of given Order ID
+   * {@inheritDoc}
    */
   @Override
   public Order getOrderByOrderId(int order_id) {

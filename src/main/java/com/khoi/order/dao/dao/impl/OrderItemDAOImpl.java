@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements IOrderItemDAO {
 
   /**
-   * <p>This method calculates total price of an order</p>
-   * @param order_id Order ID needs to be calculated price
-   * @return Total price of given order
+   * {@inheritDoc}
    */
   @Override
   public int calculateTotalPrice(int order_id) {
@@ -27,10 +25,9 @@ public class OrderItemDAOImpl extends BaseDAOImpl<OrderItem, Integer> implements
     return Integer.parseInt(query.getResultList().get(0).toString());
   }
 
+
   /**
-   * <p>This method retrieves all order items of given order in database</p>
-   * @param order_id Order ID needs to be retrieved its order items
-   * @return All order items belong to provided Order
+   * {@inheritDoc}
    */
   @Override
   public List<OrderItem> getOrderItemsByOrderId(int order_id) {
