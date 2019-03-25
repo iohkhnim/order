@@ -68,6 +68,12 @@
       <artifactId>productproto</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-tcnative-boringssl-static</artifactId>
+      <version>2.0.20.Final</version>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -82,7 +88,7 @@
         <version>3.0.0</version>
         <configuration>
           <source>1.8</source>
-          <target>1.8</target>
+          <!--<target>1.8</target>-->
         </configuration>
       </plugin>
     </plugins>
