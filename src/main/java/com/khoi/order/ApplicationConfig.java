@@ -22,7 +22,7 @@ public class ApplicationConfig {
   private final String productServiceEndpoint = "localhost:6575";
 
   private final String priceServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
-  private final String stockServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
+  private final String stockServerKeyPath = "src/main/java/com/khoi/order/key/castock.crt";
   private final String supplierServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
   private final String productServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
 
