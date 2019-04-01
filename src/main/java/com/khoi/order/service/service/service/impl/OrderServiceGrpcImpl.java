@@ -81,10 +81,16 @@ public class OrderServiceGrpcImpl extends OrderServiceGrpc.OrderServiceImplBase 
   @Override
   public void getOrders(GetOrdersRequest request,
       StreamObserver<GetOrdersResponse> responseObserver) {
-    List<Order> orderList = orderDAO.getOrdersByCustomerId(request.getCustomerId());
-    orderList.stream().forEach(p -> responseObserver
-        .onNext(p.toProto(orderItemService.calculateTotalPrice(p.getId()))));
-    responseObserver.onCompleted();
+    try {
+      List<Order> orderList = orderDAO.getOrdersByCustomerId(request.getCustomerId());
+      orderList.stream().forEach(p -> responseObserver
+          .onNext(p.toProto(orderItemService.calculateTotalPrice(p.getId()))));
+      responseObserver.onCompleted();
+    } catch (Exception ex) {
+      Status status = Status.newBuilder().setCode(Code.NOT_FOUND_VALUE)
+          .setMessage("No such item").build();
+      responseObserver.onError(StatusProto.toStatusRuntimeException(status));
+    }
   }
 
   /**

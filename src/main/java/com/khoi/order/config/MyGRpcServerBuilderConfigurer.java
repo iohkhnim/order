@@ -1,4 +1,4 @@
-package com.khoi.order;
+package com.khoi.order.config;
 
 import io.grpc.ServerBuilder;
 import io.grpc.netty.GrpcSslContexts;

@@ -1,4 +1,4 @@
-package com.khoi.order;
+package com.khoi.order.config;
 
 import com.khoi.productproto.ProductServiceGrpc;
 import com.khoi.proto.PriceServiceGrpc;
