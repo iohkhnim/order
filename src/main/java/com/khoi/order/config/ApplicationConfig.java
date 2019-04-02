@@ -21,10 +21,10 @@ public class ApplicationConfig {
   private final String supplierServiceEndpoint = "localhost:6580";
   private final String productServiceEndpoint = "localhost:6575";
 
-  private final String priceServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
-  private final String stockServerKeyPath = "src/main/java/com/khoi/order/key/castock.crt";
-  private final String supplierServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
-  private final String productServerKeyPath = "src/main/java/com/khoi/order/key/ca.crt";
+  private final String priceServerKeyPath = "key/ca.crt";
+  private final String stockServerKeyPath = "key/castock.crt";
+  private final String supplierServerKeyPath = "key/ca.crt";
+  private final String productServerKeyPath = "key/ca.crt";
 
   @Bean(name = "priceChannel")
   Channel priceChannel() throws Exception {
