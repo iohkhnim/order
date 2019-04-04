@@ -16,15 +16,16 @@ import java.io.File;
 
 @Configuration
 public class ApplicationConfig {
-  private final String priceServiceEndpoint = "localhost:6565";
-  private final String stockServiceEndpoint = "localhost:6570";
-  private final String supplierServiceEndpoint = "localhost:6580";
-  private final String productServiceEndpoint = "localhost:6575";
 
-  private final String priceServerKeyPath = "key/ca.crt";
-  private final String stockServerKeyPath = "key/castock.crt";
-  private final String supplierServerKeyPath = "key/ca.crt";
-  private final String productServerKeyPath = "key/ca.crt";
+  private final String productServiceEndpoint = "172.17.0.2:6565";
+  private final String priceServiceEndpoint = "172.17.0.3:6565";
+  private final String stockServiceEndpoint = "172.17.0.4:6565";
+  private final String supplierServiceEndpoint = "172.17.0.5:6565";
+
+  private final String productServerKeyPath = "key/product.crt";
+  private final String priceServerKeyPath = "key/price.crt";
+  private final String stockServerKeyPath = "key/stock.crt";
+  private final String supplierServerKeyPath = "key/supplier.crt";
 
   @Bean(name = "priceChannel")
   Channel priceChannel() throws Exception {
