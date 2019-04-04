@@ -1,8 +1,10 @@
-version: '3'
+version: '3.4'
 services:
-  web:
-    build: .
+  order:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8105:8080"
-  redis:
-    image: "redis:alpine"
+      - "8095:8080"
+    network_mode: bridge
+
