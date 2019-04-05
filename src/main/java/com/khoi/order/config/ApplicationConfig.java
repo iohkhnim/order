@@ -8,24 +8,32 @@ import io.grpc.Channel;
 import io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.NegotiationType;
 import io.grpc.netty.NettyChannelBuilder;
+import java.io.File;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.File;
 
 @Configuration
 public class ApplicationConfig {
 
-  private final String productServiceEndpoint = "172.17.0.2:6565";
-  private final String priceServiceEndpoint = "172.17.0.3:6565";
-  private final String stockServiceEndpoint = "172.17.0.4:6565";
-  private final String supplierServiceEndpoint = "172.17.0.5:6565";
+  @Value("${productServiceEndpoint}")
+  private String productServiceEndpoint;
+  @Value("${priceServiceEndpoint}")
+  private String priceServiceEndpoint;
+  @Value("${stockServiceEndpoint}")
+  private String stockServiceEndpoint;
+  @Value("${supplierServiceEndpoint}")
+  private String supplierServiceEndpoint;
 
-  private final String productServerKeyPath = "key/product.crt";
-  private final String priceServerKeyPath = "key/price.crt";
-  private final String stockServerKeyPath = "key/stock.crt";
-  private final String supplierServerKeyPath = "key/supplier.crt";
+  @Value("${productServerKeyPath}")
+  private String productServerKeyPath;
+  @Value("${priceServerKeyPath}")
+  private String priceServerKeyPath;
+  @Value("${stockServerKeyPath}")
+  private String stockServerKeyPath;
+  @Value("${supplierServerKeyPath}")
+  private String supplierServerKeyPath;
 
   @Bean(name = "priceChannel")
   Channel priceChannel() throws Exception {
