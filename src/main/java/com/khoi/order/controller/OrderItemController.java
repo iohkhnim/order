@@ -23,12 +23,12 @@ public class OrderItemController {
    * @return Https status according to result
    */
   @PostMapping("create")
-  public ResponseEntity<Void> create(@RequestBody OrderItem orderItem) {
-    Boolean flag = orderItemService.create(orderItem);
-    if (flag.equals(true)) {
-      return new ResponseEntity<Void>(HttpStatus.CREATED);
+  public ResponseEntity<String> create(@RequestBody OrderItem orderItem) {
+    int id = orderItemService.create(orderItem);
+    if (id > 0) {
+      return new ResponseEntity<String>(String.valueOf(id), HttpStatus.CREATED);
     } else {
-      return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+      return new ResponseEntity<String>(String.valueOf(id), HttpStatus.CONFLICT);
     }
   }
 

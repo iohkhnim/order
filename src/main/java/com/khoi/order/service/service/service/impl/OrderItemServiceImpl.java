@@ -9,16 +9,14 @@ import com.khoi.productproto.GetProductNameByIdRequest;
 import com.khoi.productproto.ProductServiceGrpc;
 import com.khoi.proto.GetPriceRequest;
 import com.khoi.proto.PriceServiceGrpc;
-import com.khoi.stockproto.GetBestStockRequest;
-import com.khoi.stockproto.GetSupplierIdByStockIdRequest;
-import com.khoi.stockproto.StockServiceGrpc;
-import com.khoi.stockproto.SubtractRequest;
+import com.khoi.stockproto.*;
 import com.khoi.supplierproto.GetSupplierNameByIdRequest;
 import com.khoi.supplierproto.SupplierServiceGrpc;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
@@ -26,14 +24,17 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
 
   @Qualifier("priceService")
   private final PriceServiceGrpc.PriceServiceBlockingStub priceService;
+
   @Qualifier("stockService")
   private final StockServiceGrpc.StockServiceBlockingStub stockService;
+
   @Qualifier("supplierService")
   private final SupplierServiceGrpc.SupplierServiceBlockingStub supplierService;
+
   @Qualifier("productService")
   private final ProductServiceGrpc.ProductServiceBlockingStub productService;
-  @Autowired
-  IOrderItemDAO orderItemDAO;
+
+  @Autowired IOrderItemDAO orderItemDAO;
 
   public OrderItemServiceImpl(
       PriceServiceGrpc.PriceServiceBlockingStub priceService,
@@ -47,8 +48,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   }
 
   /**
-   * <p>This method gives stock ID of a product with the largest stock through stock gRPC
-   * server</p>
+   * This method gives stock ID of a product with the largest stock through stock gRPC server
    *
    * @param product_id Product ID that is bought
    * @param amount Amount that customer bought
@@ -67,7 +67,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   }
 
   /**
-   * <p>This method return price of a product through price gRPC server</p>
+   * This method return price of a product through price gRPC server
    *
    * @param product_id product ID need to retrieve its price
    * @return price of that product
@@ -84,7 +84,7 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   }
 
   /**
-   * <p>This method subtracts stock from database through stock gRPC server</p>
+   * This method subtracts stock from database through stock gRPC server
    *
    * @param stock_id Stock ID need to be subtracted
    * @param amount Amount subtract
@@ -93,8 +93,8 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
   private Boolean subtract(int stock_id, int amount) {
     try {
       if (stockService
-          .subtract(SubtractRequest.newBuilder().setStockId(stock_id).setAmount(amount).build())
-          .getStockId()
+              .subtract(SubtractRequest.newBuilder().setStockId(stock_id).setAmount(amount).build())
+              .getStockId()
           > 0) {
         return true;
       } else {
@@ -106,11 +106,9 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
-  public Boolean create(CheckoutDataProto checkoutDataProto, int order_id) {
+  public int create(CheckoutDataProto checkoutDataProto, int order_id) {
     int product_id = checkoutDataProto.getProductId();
     int amount = checkoutDataProto.getAmount();
     int price = getPrice(product_id);
@@ -118,57 +116,57 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem, Integer>
     Boolean isSubtractCompleted = subtract(bestStockId, amount);
     if (price > 0 && bestStockId > 0 && isSubtractCompleted == true) {
       OrderItem orderItem = new OrderItem(order_id, product_id, bestStockId, amount, price);
-      if (orderItemDAO.create(orderItem)) {
-        return true;
+      int id = orderItemDAO.create(orderItem);
+      if (id > 0) {
+        return id;
       } else {
-        return false;
+        return 0;
       }
     }
-    return false;
+    return 0;
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public int calculateTotalPrice(int order_id) {
     return orderItemDAO.calculateTotalPrice(order_id);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public int getSupplierIdByStockId(int stock_id) {
-    return stockService.getSupplierIdByStockId(
-        GetSupplierIdByStockIdRequest.newBuilder().setStockId(stock_id).build()).getSupplierId();
+    return stockService
+        .getSupplierIdByStockId(
+            GetSupplierIdByStockIdRequest.newBuilder().setStockId(stock_id).build())
+        .getSupplierId();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public List<OrderItem> getOrderItemsByOrderId(int order_id) {
     return orderItemDAO.getOrderItemsByOrderId(order_id);
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getSupplierNameById(int supplier_id) {
-    return supplierService.getSupplierNameById(
-        GetSupplierNameByIdRequest.newBuilder().setSupplierId(supplier_id).build())
+    return supplierService
+        .getSupplierNameById(
+            GetSupplierNameByIdRequest.newBuilder().setSupplierId(supplier_id).build())
         .getSupplierName();
   }
 
-  /**
-   * {@inheritDoc}
-   */
+  /** {@inheritDoc} */
   @Override
   public String getProductNameById(int product_id) {
     return productService
         .getProductNameById(GetProductNameByIdRequest.newBuilder().setProductId(product_id).build())
         .getProductName();
+  }
+
+  public Boolean addStock(int stock_id, int stock) {
+    return stockService
+        .addStock(AddStockRequest.newBuilder().setStockId(stock_id).setStock(stock).build())
+        .getResponse();
   }
 }

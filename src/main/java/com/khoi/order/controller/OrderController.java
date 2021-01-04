@@ -28,12 +28,12 @@ public class OrderController {
    * @return Https status according to result
    */
   @PostMapping("create")
-  public ResponseEntity<Void> create(@RequestBody Order order) {
-    Boolean flag = orderService.create(order);
-    if (flag.equals(true)) {
-      return new ResponseEntity<Void>(HttpStatus.CREATED);
+  public ResponseEntity<String> create(@RequestBody Order order) {
+    int id = orderService.create(order);
+    if (id > 0) {
+      return new ResponseEntity<String>(String.valueOf(id), HttpStatus.CREATED);
     } else {
-      return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+      return new ResponseEntity<String>(String.valueOf(id), HttpStatus.CONFLICT);
     }
   }
 
@@ -83,6 +83,14 @@ public class OrderController {
       return new ResponseEntity<Void>(HttpStatus.OK);
     } else {
       return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+    }
+  }
+  @GetMapping("updateStatus/{id}/{status}")
+  public ResponseEntity<Void> updateOrderStatus(@PathVariable("id") int id, @PathVariable("status") int status) {
+    if (orderService.updateOrderStatus(id, status) > 0) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
     }
   }
 }

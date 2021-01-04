@@ -14,7 +14,7 @@ public interface IOrderItemService extends IBaseService<OrderItem, Integer> {
    * @param order_id Order ID of all order items
    * @return Return a boolean value according to result
    */
-  Boolean create(CheckoutDataProto checkoutDataProto, int order_id);
+  int create(CheckoutDataProto checkoutDataProto, int order_id);
 
   /**
    * <p>This method calculates total price of an order</p>
